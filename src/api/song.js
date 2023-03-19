@@ -43,3 +43,9 @@ export const reqGetAllLists = () => request({
     url: `/list/all/name/id`,
     method: 'GET',
 })
+
+// 7.根据关键词拿数据
+export const reqGetSongsOfKeyword = (keyword, page, limit)=> request({
+    url: `/song/all?keyword=${keyword}&offset=${page}&limit=${limit}`,
+    method: 'GET'
+})

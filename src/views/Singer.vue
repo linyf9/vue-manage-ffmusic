@@ -2,6 +2,11 @@
     <div class="singerManage">
         <div class="manage-header">
             <el-button @click="showDialog" type="primary">+ 新增</el-button>
+            <div class="search">
+                <el-input placeholder="请输入内容" prefix-icon="el-icon-search" v-model.trim="keyword">
+                </el-input>
+                <el-button type="primary" plain class="btn" @click="onSearch"> 搜索 </el-button>
+            </div>
         </div>
 
         <!-- 歌手数据表格（5列） -->
@@ -107,6 +112,7 @@ export default {
     name: 'Singer',
     data() {
         return {
+            keyword: '',
             dialogFormVisible: false,
             form: {
                 singer_name: '',
@@ -137,6 +143,16 @@ export default {
         };
     },
     methods: {
+        async onSearch() {
+            // console.log(this.keyword);
+            this.page = 1
+            let res = await this.$api.singer.reqGetSingersOfKeyword(this.keyword, this.page, this.limit)
+            console.log(res);
+            if (res.code === 200) {
+                this.total = res.total
+                this.list = res.data
+            }
+        },
         // 这个方法在歌曲管理那里还有用
         async hanleForm(e) {
             // 收集表单数据
@@ -349,6 +365,22 @@ export default {
     }
 }
 </script>
+
+<style lang="less" scoped>
+.manage-header {
+    display: flex;
+    // justify-content: space-between;
+
+    .search {
+        display: flex;
+        margin-left: 20px;
+
+        .btn {
+            margin-left: 5px;
+        }
+    }
+}
+</style>
 
 <style>
 .avatar-uploader .el-upload {

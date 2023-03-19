@@ -2,6 +2,11 @@
     <div class="listManage">
         <div class="manage-header">
             <el-button @click="showDialog" type="primary">+ 新增</el-button>
+            <div class="search">
+                <el-input placeholder="请输入内容" prefix-icon="el-icon-search" v-model.trim="keyword">
+                </el-input>
+                <el-button type="primary" plain class="btn" @click="onSearch"> 搜索 </el-button>
+            </div>
         </div>
         <!-- 歌单数据表格（5列） list_title  list_details  list_imgpath -->
         <el-table style="width: 100%; margin-top: 10px;" border :data="list">
@@ -65,6 +70,7 @@ export default {
     name: 'List',
     data() {
         return {
+            keyword: '',
             dialogFormVisible: false,
             page: 1,//表示当前在第几页
             limit: 3,//表示一页展示几条数据
@@ -89,6 +95,15 @@ export default {
         };
     },
     methods: {
+        async onSearch() {
+            this.page = 1
+            let res = await this.$api.list.reqGetListsOfKeyword(this.keyword, this.page, this.limit)
+            // console.log(res, '09876543');
+            if (res.code === 200) {
+                this.total = res.total
+                this.list = res.data
+            }
+        },
         handleClose(done) {
             this.$confirm('确认关闭？')
                 .then(_ => {
@@ -280,6 +295,21 @@ export default {
     }
 }
 </script>
+
+<style lang="less" scoped>
+.manage-header {
+    display: flex;
+
+    .search {
+        display: flex;
+        margin-left: 20px;
+
+        .btn {
+            margin-left: 5px;
+        }
+    }
+}
+</style>
 
 <style>
 .avatar-uploader .el-upload {

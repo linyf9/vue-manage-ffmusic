@@ -30,3 +30,9 @@ export const reqDeleteSinger = (singer_id) => request({
     url: `/singer/admin/${singer_id}`,
     method: 'DELETE',
 })
+
+// 5. 按关键词获取所有歌手的数据
+export const reqGetSingersOfKeyword = (keyword,page,limit) => request({
+    url: `/singer?keyword=${keyword}&offset=${page}&limit=${limit}`,
+    method: 'GET'
+})

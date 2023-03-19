@@ -2,6 +2,11 @@
     <div class="songManage">
         <div class="manage-header">
             <el-button @click="showDialog" type="primary">+ 新增</el-button>
+            <div class="search">
+                <el-input placeholder="请输入内容" prefix-icon="el-icon-search" v-model.trim="keyword">
+                </el-input>
+                <el-button type="primary" plain class="btn" @click="onSearch"> 搜索 </el-button>
+            </div>
         </div>
         <!-- 
                 song_songname: '',
@@ -136,6 +141,7 @@ export default {
     name: 'Song',
     data() {
         return {
+            keyword: '',
             dialogFormVisible: false,
             dialogVisible: false,
             page: 1,//表示当前在第几页
@@ -156,6 +162,16 @@ export default {
         };
     },
     methods: {
+        async onSearch() {
+            // console.log(this.keyword);
+            this.page = 1
+            let res = await this.$api.song.reqGetSongsOfKeyword(this.keyword, this.page, this.limit)
+            console.log(res, '777777');
+            if (res.code === 200) {
+                this.total = res.total
+                this.list = res.data
+            }
+        },
         // 点击添加歌单的按钮
         async showDialog() {
             // 显示对话框
@@ -426,7 +442,21 @@ export default {
 }
 </script>
 
+
 <style lang="less" scoped>
+.manage-header {
+    display: flex;
+
+    .search {
+        display: flex;
+        margin-left: 20px;
+
+        .btn {
+            margin-left: 5px;
+        }
+    }
+}
+
 #song {
     display: flex;
     flex-direction: column;

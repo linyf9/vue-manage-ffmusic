@@ -29,3 +29,9 @@ export const reqDeleteList = (list_id) => request({
     url: `/list/admin/delete/${list_id}`,
     method: 'DELETE',
 })
+
+// 5. 按关键词获取所有歌单的数据
+export const reqGetListsOfKeyword = (keyword,page,limit) => request({
+    url: `/list?keyword=${keyword}&offset=${page}&limit=${limit}`,
+    method: 'GET'
+})

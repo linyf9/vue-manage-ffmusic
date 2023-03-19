@@ -2,6 +2,11 @@
     <div class="userManage">
         <div class="manage-header">
             <el-button @click="showDialog" type="primary">+ 新增</el-button>
+            <div class="search">
+                <el-input placeholder="请输入内容" prefix-icon="el-icon-search" v-model.trim="keyword">
+                </el-input>
+                <el-button type="primary" plain class="btn" @click="onSearch"> 搜索 </el-button>
+            </div>
         </div>
 
         <el-table style="width: 100%; margin-top: 10px;" border :data="list">
@@ -50,6 +55,7 @@ export default {
     name: 'User',
     data() {
         return {
+            keyword: '',
             dialogFormVisible: false,
             page: 1,//表示当前在第几页
             limit: 7,//表示一页展示几条数据
@@ -74,6 +80,19 @@ export default {
         };
     },
     methods: {
+        async onSearch() {
+            // console.log(this.keyword);
+            this.page = 1
+            let res = await this.$api.user.reqGetUsersOfKeyword(this.keyword, this.page, this.limit)
+            // console.log(res, '777777');
+            if (res.code === 200) {
+                this.total = res.total
+                this.list = res.data.map(item => {
+                    let createdAt = moment(item.createdAt).format('YYYY年MM月DD日')
+                    return { ...item, createdAt }
+                })
+            }
+        },
         handleClose(done) {
             this.$confirm('确认关闭？')
                 .then(_ => {
@@ -188,6 +207,21 @@ export default {
     }
 }
 </script>
+
+<style lang="less" scoped>
+.manage-header {
+    display: flex;
+
+    .search {
+        display: flex;
+        margin-left: 20px;
+
+        .btn {
+            margin-left: 5px;
+        }
+    }
+}
+</style>
 
 <style>
 .avatar-uploader .el-upload {

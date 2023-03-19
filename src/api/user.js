@@ -45,3 +45,9 @@ export const reqDeleteUser = (user_id) => request({
     url: `/user/admin/delete/${user_id}`,
     method: 'DELETE',
 })
+
+// 6. 根据关键词获取用户信息
+export const reqGetUsersOfKeyword = (keyword, page, limit) => request({
+    url: `/user/all?keyword=${keyword}&offset=${page}&limit=${limit}`,
+    method: 'GET'
+})
